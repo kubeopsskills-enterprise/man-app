@@ -85,7 +85,7 @@ jobs:
 
     name: Dispatch repository
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted:dev
 
     # needs: [unit-tests, codeql]
 
