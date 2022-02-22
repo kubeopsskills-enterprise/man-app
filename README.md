@@ -1,3 +1,4 @@
 # ais-app
 
-Pipeline trigger
+# Dev CI
+[![Develop CI](https://github.com/kubeops-learning/ais-app/actions/workflows/develop-ci.yml/badge.svg)](https://github.com/kubeops-learning/ais-app/actions/workflows/develop-ci.yml)
