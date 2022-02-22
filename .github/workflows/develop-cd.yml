@@ -7,6 +7,10 @@ on:
 jobs:
   build:
     runs-on: self-hosted:dev
+    env:
+      AZURE_WEBAPP_NAME: ais-dev-web-app    # set this to your application's name
+      AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+      DOTNET_VERSION: '6.0.x'           # set this to the dot net version to use
 
     steps:
       - uses: actions/checkout@v2
@@ -14,7 +18,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }} 
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
