@@ -96,5 +96,5 @@ jobs:
             --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
             --header 'accept: application/vnd.github.v3+json' \
             --header 'Content-Type: application/json' \
-            --data-raw '{"event_type":"dev-deploy-ais-app"}'
+            --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
 
