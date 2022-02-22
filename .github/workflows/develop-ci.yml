@@ -1,0 +1,100 @@
+name: Develop CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+
+  # unit-tests:
+
+  #   name: Run Unit tests
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v1
+  #     with:
+  #       dotnet-version: '6.0.x'
+  #   - name: Restore dependencies
+  #     run: dotnet restore
+  #   - name: Build
+  #     run: dotnet build --no-restore
+  #   - name: Test
+  #     run: dotnet test --no-build --verbosity normal
+
+  ##################################################################################################
+
+  # codeql:
+
+  #   name: Scan the code with CodeQL
+
+    # If you're only analyzing JavaScript or Python, CodeQL runs on ubuntu-latest, windows-latest, and macos-latest.
+    # If you're analyzing C/C++, C#, Go, or Java, CodeQL runs on ubuntu-latest, windows-2019, and macos-latest.
+    # runs-on: ubuntu-latest
+
+    # permissions:
+    #   security-events: write
+    #   actions: read
+    #   contents: read
+
+    # steps:
+    #   - name: Checkout repository
+    #     uses: actions/checkout@v2
+
+      # - run: |
+      #     echo "YOU CAN PASS FOR NOW!!!";
+
+      # Always PASS FOR NOW!!!!
+
+
+      # # Initializes the CodeQL tools for scanning.
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v1
+      #   # Override language selection by uncommenting this and choosing your languages
+      #   with:
+      #     languages: csharp
+
+      # # Autobuild attempts to build any compiled languages (C/C++, C#, or Java).
+      # # If this step fails, then you should remove it and run the build manually (see below).
+      # - name: Autobuild
+      #   uses: github/codeql-action/autobuild@v1
+
+      # # ℹ️ Command-line programs to run using the OS shell.
+      # # 📚 https://git.io/JvXDl
+
+      # # ✏️ If the Autobuild fails above, remove it and uncomment the following
+      # #    three lines and modify them (or add more) to build your code if your
+      # #    project uses a compiled language
+
+      # #- run: |
+      # #     make bootstrap
+      # #     make release
+
+      # - name: Perform CodeQL Analysis
+      #   uses: github/codeql-action/analyze@v1
+
+
+  ##################################################################################################
+
+  dispatch-repository:
+
+    name: Dispatch repository
+
+    runs-on: ubuntu-latest
+
+    # needs: [unit-tests, codeql]
+
+    steps:
+      - name: Repository dispatch
+        run: |
+          curl --location --request POST 'https://api.github.com/repos/kubeops-learning/ais-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"dev-deploy-ais-app"}'
+
