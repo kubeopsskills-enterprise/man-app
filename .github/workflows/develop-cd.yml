@@ -52,3 +52,16 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_20D8DE54B98A4F39B0A98B86A0A66B54 }}
           package: .
+
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Save latest deployed commit id
+        run: |
+          echo ${GITHUB_SHA} > last_dev_deployed_sha
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "save last SHA deployed to develop app service"
+          git push
