@@ -30,7 +30,8 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: self-hosted:dev
+    # runs-on: self-hosted:dev
+    runs-on: ubuntu-20.04
     needs: build
     environment:
       name: 'Production'
