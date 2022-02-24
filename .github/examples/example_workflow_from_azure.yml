@@ -22,9 +22,12 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
+      #ควรจะ restore ก่อน .net restore
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
+#build อีกรอบ
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
