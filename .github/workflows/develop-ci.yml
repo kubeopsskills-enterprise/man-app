@@ -90,8 +90,6 @@ jobs:
     # needs: [unit-tests, codeql]
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Repository dispatch
         run: |
           curl -v --location --request POST 'https://api.github.com/repos/kubeops-learning/ais-app/dispatches' \

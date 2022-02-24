@@ -1,0 +1,26 @@
+name: Develop CI
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "*.*.*"
+
+
+jobs:
+
+  dispatch-repository:
+
+    name: Dispatch repository
+
+    runs-on: self-hosted:dev
+
+    steps:
+      - name: Repository dispatch
+        run: |
+          curl -v --location --request POST 'https://api.github.com/repos/kubeops-learning/ais-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"sit-ais-app-repository-dispatch"}'
