@@ -2,8 +2,6 @@ name: Develop CI
 
 on:
   push:
-    branches:
-      - "main"
     tags:
       - "*.*.*"
 
@@ -11,6 +9,7 @@ on:
 jobs:
 
   dispatch-repository:
+    if: github.event.base_ref=='refs/heads/main'
 
     name: Dispatch repository
 
