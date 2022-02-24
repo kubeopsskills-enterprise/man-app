@@ -52,6 +52,8 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_20D8DE54B98A4F39B0A98B86A0A66B54 }}
           package: .
 
+      - uses: actions/checkout@v2
+
       - name: Save latest deployed commit id
         run: |
           echo ${GITHUB_SHA} > last_dev_deployed_sha
