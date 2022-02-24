@@ -30,8 +30,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    # runs-on: self-hosted:dev
-    runs-on: ubuntu-20.04
+    runs-on: self-hosted:dev
     needs: build
     environment:
       name: 'Production'
@@ -53,6 +52,8 @@ jobs:
           package: .
 
       - uses: actions/checkout@v2
+        with:
+          ref: develop
 
       - name: Save latest deployed commit id
         run: |
