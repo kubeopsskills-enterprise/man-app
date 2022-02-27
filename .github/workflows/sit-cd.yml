@@ -4,6 +4,9 @@ on:
   repository_dispatch:
     types: [sit-ais-app-repository-dispatch]
 
+env:
+  DOTNET_INSTALL_DIR: "/home/azureuser/.dotnet"
+
 jobs:
   build:
     runs-on: self-hosted:sit
