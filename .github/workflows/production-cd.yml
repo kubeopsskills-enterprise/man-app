@@ -1,4 +1,4 @@
-name: SIT CD
+name: PRODUCTION CD
 
 on:
   repository_dispatch:
