@@ -43,6 +43,11 @@ jobs:
       security-events: write
       actions: read
       contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript' ]
     
     steps:
       - name: Checkout repository
