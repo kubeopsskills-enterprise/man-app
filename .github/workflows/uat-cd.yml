@@ -2,7 +2,7 @@ name: SIT CD
 
 on:
   repository_dispatch:
-    types: [sit-ais-app-repository-dispatch]
+    types: [uat-cd-repository-dispatch]
 
 env:
   DOTNET_CLI_HOME: "/home/azureuser"
@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: .net-app
+          name: .net-app-uat
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
@@ -46,28 +46,13 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: .net-app
+          name: .net-app-uat
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'ais-sit'
+          app-name: 'ais-uat'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEFA5B81DB7A43FB80E71E0167AEDCD2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_UAT }}
           package: .
-
-  dispatch-repository:
-    needs: deploy
-    name: Dispatch repository
-
-    runs-on: self-hosted:sit
-
-    steps:
-      - name: Repository dispatch
-        run: |
-          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-            --header 'accept: application/vnd.github.v3+json' \
-            --header 'Content-Type: application/json' \
-            --data-raw '{"event_type":"uat-ci-repository-dispatch"}'
