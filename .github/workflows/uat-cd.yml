@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted:sit
+    runs-on: self-hosted:uat
     
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +36,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: self-hosted:sit
+    runs-on: self-hosted:uat
     needs: build
     environment:
       name: 'Production'
@@ -56,3 +56,16 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_UAT }}
           package: .
+
+  dispatch-repository:
+    runs-on: self-hosted:uat
+    needs: deploy
+
+    steps:
+      - name: Repository dispatch
+        run: |
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"review-by-load-test-team"}'

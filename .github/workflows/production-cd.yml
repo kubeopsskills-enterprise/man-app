@@ -1,8 +1,8 @@
-name: Development CD
+name: SIT CD
 
 on:
   repository_dispatch:
-    types: [dev-ais-app-repository-dispatch]
+    types: [uat-cd-repository-dispatch]
 
 env:
   DOTNET_CLI_HOME: "/home/azureuser"
@@ -10,12 +10,12 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted:dev
-
+    runs-on: self-hosted:production
+    
     steps:
       - uses: actions/checkout@v2
         with:
-            ref: develop
+            ref: main
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -32,11 +32,11 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: .net-app-develop
+          name: .net-app-production
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: self-hosted:dev
+    runs-on: self-hosted:production
     needs: build
     environment:
       name: 'Production'
@@ -46,13 +46,13 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: .net-app-develop
+          name: .net-app-production
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'ais-dev'
+          app-name: 'ais-uat'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_UAT }}
           package: .
