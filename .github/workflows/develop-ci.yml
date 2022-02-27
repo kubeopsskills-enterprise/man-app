@@ -7,7 +7,8 @@ on:
     branches: [ develop ]
 
 env:
-  DOTNET_CLI_HOME: "/usr/bin/"
+  DOTNET_CLI_HOME: "/home/azureuser"
+  HOME: "/home/azureuser"
 
 jobs:
 
