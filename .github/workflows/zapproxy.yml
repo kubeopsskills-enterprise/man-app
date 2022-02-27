@@ -6,7 +6,6 @@ on:
 
 jobs:
   zap_scan:
-    # runs-on: ubuntu-latest
     runs-on: self-hosted:sit
     name: Scan the web application
     steps:
