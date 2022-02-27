@@ -64,7 +64,7 @@ jobs:
   ##################################################################################################
 
   dispatch-repository:
-
+    if: github.event_name == 'push'
     name: Dispatch repository
 
     runs-on: self-hosted:dev
