@@ -5,10 +5,9 @@ on:
     types: [dast-testing-repository-dispatch]
 
 jobs:
-  # build:
-  #   runs-on: self-hosted:sit
   zap_scan:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted:sit
     name: Scan the webapplication
     steps:
       - name: Checkout
@@ -21,6 +20,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'owasp/zap2docker-stable'
           target: 'https://ais-sit.azurewebsites.net/'
-          # rules_file_name: '.zap/rules.tsv'
+          rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
           fail_action: true
