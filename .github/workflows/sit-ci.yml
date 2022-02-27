@@ -13,7 +13,7 @@ jobs:
 
     name: Dispatch repository
 
-    runs-on: self-hosted:dev
+    runs-on: self-hosted:sit
 
     steps:
       - name: Repository dispatch
