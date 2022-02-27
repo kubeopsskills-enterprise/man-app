@@ -55,3 +55,19 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEFA5B81DB7A43FB80E71E0167AEDCD2 }}
           package: .
+
+  dispatch-repository:
+    if: github.event.base_ref=='refs/heads/main'
+
+    name: Dispatch repository
+
+    runs-on: self-hosted:sit
+
+    steps:
+      - name: Repository dispatch
+        run: |
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"dast-testing-repository-dispatch"}'
