@@ -8,24 +8,24 @@ on:
 
 jobs:
 
-  # unit-tests:
+  unit-tests:
 
-  #   name: Run Unit tests
+    name: Run Unit tests
 
-  #   runs-on: ubuntu-latest
+    runs-on: self-hosted:dev
 
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v1
-  #     with:
-  #       dotnet-version: '6.0.x'
-  #   - name: Restore dependencies
-  #     run: dotnet restore
-  #   - name: Build
-  #     run: dotnet build --no-restore
-  #   - name: Test
-  #     run: dotnet test --no-build --verbosity normal
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
 
   ##################################################################################################
 
@@ -88,10 +88,9 @@ jobs:
     runs-on: self-hosted:dev
 
     # needs: [unit-tests, codeql]
+    needs: [unit-tests]
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Repository dispatch
         run: |
           curl -v --location --request POST 'https://api.github.com/repos/kubeops-learning/ais-app/dispatches' \

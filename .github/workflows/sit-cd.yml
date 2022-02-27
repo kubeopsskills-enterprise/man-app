@@ -1,0 +1,13 @@
+name: SIT CD
+
+on:
+  repository_dispatch:
+    types: [sit-ais-app-repository-dispatch]
+
+jobs:
+  build:
+    runs-on: self-hosted:sit
+    
+    steps:
+      - run: |
+          echo "HOO YAH!"
