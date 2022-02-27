@@ -5,7 +5,7 @@ on:
     types: [dev-ais-app-repository-dispatch]
 
 env:
-  DOTNET_INSTALL_DIR: "/home/azureuser/.dotnet"
+  DOTNET_CLI_HOME: "/home/azureuser/.dotnet"
 
 jobs:
   build:
