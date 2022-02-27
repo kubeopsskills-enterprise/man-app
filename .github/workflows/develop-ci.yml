@@ -8,6 +8,12 @@ on:
 
 jobs:
 
+  test:
+    runs-on: self-hosted:dev
+
+    steps:
+      - run: echo ${{ github.event_name }}
+
   unit-tests:
 
     name: Run Unit tests
@@ -86,11 +92,7 @@ jobs:
 
   ##################################################################################################
 
-  test:
-    runs-on: self-hosted:dev
 
-    steps:
-      - run: echo ${{ github.event_name }}
 
   dispatch-repository:
     if: github.event_name == 'push'
