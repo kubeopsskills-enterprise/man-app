@@ -2,7 +2,7 @@ name: SIT CD
 
 on:
   repository_dispatch:
-    types: [uat-cd-repository-dispatch]
+    types: [production-cd-repository-dispatch]
 
 env:
   DOTNET_CLI_HOME: "/home/azureuser"
