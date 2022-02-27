@@ -58,8 +58,7 @@ jobs:
           package: .
 
   dispatch-repository:
-    if: github.event.base_ref=='refs/heads/main'
-
+    needs: deploy
     name: Dispatch repository
 
     runs-on: self-hosted:sit
