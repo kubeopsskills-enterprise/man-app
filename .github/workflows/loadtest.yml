@@ -12,11 +12,18 @@ jobs:
       name: 'LOADTEST'
 
     steps:
-      - name: Repository dispatch
-        run: |
-          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-            --header 'accept: application/vnd.github.v3+json' \
-            --header 'Content-Type: application/json' \
-            --data-raw '{"event_type":"review-by-va-pt-security-team"}'
+      - uses: actions/checkout@v2
+        with:
+            ref: main
+      - name: save cache key
+        run:
+          export BUILDCACHEKEY="build-output-"${GITHUB_SHA}
+          echo $BUILDCACHEKEY > build_cache_key
+      # - name: Repository dispatch
+      #   run: |
+      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+      #       --header 'accept: application/vnd.github.v3+json' \
+      #       --header 'Content-Type: application/json' \
+      #       --data-raw '{"event_type":"review-by-va-pt-security-team"}'
   
