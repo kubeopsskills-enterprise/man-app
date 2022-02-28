@@ -21,7 +21,6 @@ jobs:
           target: 'https://ais-sit.azurewebsites.net/'
           rules_file_name: '.zap/rules.tsv'
           fail_action: true
-      - run: echo "THEY WILL BE ADDED LATER!!!"
 
   integration_test:
     runs-on: self-hosted:uat
