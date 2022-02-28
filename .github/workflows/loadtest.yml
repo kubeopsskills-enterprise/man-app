@@ -8,29 +8,15 @@ jobs:
   dispatch-repository:
     runs-on: self-hosted:uat
     name: Approve to transfer to VA/PT security team
-    # environment:
-    #   name: 'LOADTEST'
+    environment:
+      name: 'LOADTEST'
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-            ref: develop
-      - name: save cache key
+      - name: Repository dispatch
         run: |
-          export BUILDCACHEKEY="build-output-"${GITHUB_SHA}
-          echo $BUILDCACHEKEY > build_cache_key
-          cat build_cache_key
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "save cache key"
-          git push
-
-      # - name: Repository dispatch
-      #   run: |
-      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-      #       --header 'accept: application/vnd.github.v3+json' \
-      #       --header 'Content-Type: application/json' \
-      #       --data-raw '{"event_type":"review-by-va-pt-security-team"}'
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"review-by-va-pt-security-team"}'
   
