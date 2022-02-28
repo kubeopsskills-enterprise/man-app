@@ -8,17 +8,19 @@ jobs:
   dispatch-repository:
     runs-on: self-hosted:uat
     name: Approve to transfer to VA/PT security team
-    environment:
-      name: 'LOADTEST'
+    # environment:
+    #   name: 'LOADTEST'
 
     steps:
       - uses: actions/checkout@v2
         with:
             ref: main
       - name: save cache key
-        run:
+        run: |
           export BUILDCACHEKEY="build-output-"${GITHUB_SHA}
           echo $BUILDCACHEKEY > build_cache_key
+          cat build_cache_key
+
       # - name: Repository dispatch
       #   run: |
       #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
