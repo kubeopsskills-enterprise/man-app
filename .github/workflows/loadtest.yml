@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Try to connect to db
         run: |
-          export PGPASSWORD="postgres"; psql -U postgres -h postgres
+          export PGPASSWORD="postgres"; psql -U postgres -h localhost
       # - name: Repository dispatch
       #   run: |
       #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
