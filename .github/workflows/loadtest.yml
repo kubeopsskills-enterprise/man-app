@@ -8,32 +8,15 @@ jobs:
   dispatch-repository:
     runs-on: self-hosted:uat
     name: Approve to transfer to VA/PT security team
-    # environment:
-    #   name: 'LOADTEST'
-
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+    environment:
+      name: 'LOADTEST'
 
     steps:
-      - name: Try to connect to db
+      - name: Repository dispatch
         run: |
-          export PGPASSWORD="postgres"
-          psql -U postgres -h localhost --list
-      # - name: Repository dispatch
-      #   run: |
-      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-      #       --header 'accept: application/vnd.github.v3+json' \
-      #       --header 'Content-Type: application/json' \
-      #       --data-raw '{"event_type":"review-by-va-pt-security-team"}'
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"review-by-va-pt-security-team"}'
   
