@@ -16,16 +16,12 @@ jobs:
         with:
             ref: main
 
-      - name: Retrive the latest artifact name from main branch
-        run: |
-          export ARTIFACT_NAME=$(cat latest-build-artifact)
-          echo ARTIFACT NAME: $ARTIFACT_NAME
-
       - name: Download artifact from build job
         run: |
           export ARTIFACT_NAME=$(cat latest-build-artifact)
           echo ARTIFACT NAME: $ARTIFACT_NAME
-          az storage blob download -c "build" -n "${{ env.ARTIFACT_NAME }}" -f ${GITHUB_WORKSPACE}/artifact-9d3af7cbc15f33175be5ee64e4df3828198aabb5.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          env
+          az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/artifact-9d3af7cbc15f33175be5ee64e4df3828198aabb5.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
           ls -la
       # - name: Repository dispatch
       #   run: |
