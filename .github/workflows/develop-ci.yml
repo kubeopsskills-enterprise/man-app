@@ -83,6 +83,7 @@ jobs:
           echo "TEST" > test
           cat test
           pwd
+          env
       - run: |    
           az storage blob upload --connection-string ${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}' \
             -f ./test -c build -n test-${GITHUB_SHA}
