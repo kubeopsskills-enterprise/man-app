@@ -53,24 +53,37 @@ jobs:
           git commit -m "save latest artifact build name on Dev workflow"
           git push
 
-  # deploy:
-  #   runs-on: self-hosted:dev
-  #   needs: build
-  #   environment:
-  #     name: 'Production'
-  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  deploy:
+    runs-on: self-hosted:dev
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-  #   steps:
-  #     - name: Download artifact from build job
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: .net-app-develop
+    steps:
+      # - name: Download artifact from build job
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: .net-app-develop
+      - uses: actions/checkout@v2
+        with:
+            ref: main
 
-  #     - name: Deploy to Azure Web App
-  #       id: deploy-to-webapp
-  #       uses: azure/webapps-deploy@v2
-  #       with:
-  #         app-name: 'ais-dev'
-  #         slot-name: 'Production'
-  #         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
-  #         package: .
+      - name: Retrive the latest artifact name from main branch
+        run: |
+          export ARTIFACT_NAME=$(cat latest-build-artifact)
+          echo ARTIFACT NAME: $ARTIFACT_NAME
+
+      - name: Download artifact from build job
+        run: |
+          az storage blob download --verbose -c build -n ${ARTIFACT_NAME}.zip -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          ls -la
+
+      # - name: Deploy to Azure Web App
+      #   id: deploy-to-webapp
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: 'ais-dev'
+      #     slot-name: 'Production'
+      #     publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
+      #     package: .
