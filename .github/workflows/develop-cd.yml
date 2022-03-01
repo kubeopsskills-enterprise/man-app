@@ -76,11 +76,11 @@ jobs:
           unzip ${ARTIFACT_NAME}
           ls -la ./manapp
 
-      # - name: Deploy to Azure Web App
-      #   id: deploy-to-webapp
-      #   uses: azure/webapps-deploy@v2
-      #   with:
-      #     app-name: 'ais-dev'
-      #     slot-name: 'Production'
-      #     publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
-      #     package: .
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'ais-dev'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
+          package: ./manapp
