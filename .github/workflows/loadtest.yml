@@ -8,28 +8,15 @@ jobs:
   dispatch-repository:
     runs-on: self-hosted:uat
     name: Approve to transfer to VA/PT security team
-    # environment:
-    #   name: 'LOADTEST'
+    environment:
+      name: 'LOADTEST'
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-            ref: main
-
-      - name: Download artifact from build job
+      - name: Repository dispatch
         run: |
-          export ARTIFACT_NAME=$(cat latest-build-artifact)
-          echo ARTIFACT NAME: $ARTIFACT_NAME
-          az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-          rm -rf ${{env.DOTNET_ROOT}}/myapp
-          ls -la ${{env.DOTNET_ROOT}}
-          unzip ${ARTIFACT_NAME} -d /
-          ls -la ${{env.DOTNET_ROOT}}/myapp
-      # - name: Repository dispatch
-      #   run: |
-      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-      #       --header 'accept: application/vnd.github.v3+json' \
-      #       --header 'Content-Type: application/json' \
-      #       --data-raw '{"event_type":"review-by-va-pt-security-team"}'
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"review-by-va-pt-security-team"}'
   
