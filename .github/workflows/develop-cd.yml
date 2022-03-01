@@ -36,7 +36,9 @@ jobs:
       #     path: ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
-        run: zip artifact-${GITHUB_SHA}.zip -r ${{env.DOTNET_ROOT}}/myapp
+        run: |
+          zip artifact-${GITHUB_SHA}.zip -r ${{env.DOTNET_ROOT}}/myapp
+          az storage blob upload -c build -n test-${GITHUB_SHA} -f ${GITHUB_WORKSPACE}/artifact-${GITHUB_SHA}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
 
   # deploy:
   #   runs-on: self-hosted:dev
