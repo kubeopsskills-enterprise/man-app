@@ -21,8 +21,8 @@ jobs:
           export ARTIFACT_NAME=$(cat latest-build-artifact)
           echo ARTIFACT NAME: $ARTIFACT_NAME
           az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          rm -rf ${{env.DOTNET_ROOT}}/myapp
           unzip ${ARTIFACT_NAME} -d /
-          pwd
           ls -la ${{env.DOTNET_ROOT}}/myapp
       # - name: Repository dispatch
       #   run: |
