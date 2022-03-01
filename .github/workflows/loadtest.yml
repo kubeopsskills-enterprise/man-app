@@ -21,8 +21,9 @@ jobs:
           export ARTIFACT_NAME=$(cat latest-build-artifact)
           echo ARTIFACT NAME: $ARTIFACT_NAME
           az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-          unzip ${ARTIFACT_NAME}
-          ls ./home/azureuser/.dotnet/myapp
+          unzip ${ARTIFACT_NAME} -d /
+          pwd
+          ls -la ${{env.DOTNET_ROOT}}/myapp
       # - name: Repository dispatch
       #   run: |
       #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
