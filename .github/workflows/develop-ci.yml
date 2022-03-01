@@ -79,19 +79,19 @@ jobs:
     # needs: [unit-tests, codeql]
 
     steps:
-      - run: |
-          echo "TEST" > test
-          cat test
-          pwd
-          env
-          cat ${GITHUB_WORKSPACE}/test
-      - run: |    
-          az storage blob upload -c build -n test-${GITHUB_SHA} -f ${GITHUB_WORKSPACE}/test --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-      # - name: Repository dispatch
-      #   run: |
-      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-      #       --header 'accept: application/vnd.github.v3+json' \
-      #       --header 'Content-Type: application/json' \
-      #       --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
+      # - run: |
+      #     echo "TEST" > test
+      #     cat test
+      #     pwd
+      #     env
+      #     cat ${GITHUB_WORKSPACE}/test
+      # - run: |    
+      #     az storage blob upload -c build -n test-${GITHUB_SHA} -f ${GITHUB_WORKSPACE}/test --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+      - name: Repository dispatch
+        run: |
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
 

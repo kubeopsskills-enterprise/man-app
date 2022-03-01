@@ -29,30 +29,33 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: .net-app-develop
+      #     path: ${{env.DOTNET_ROOT}}/myapp
+
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: .net-app-develop
-          path: ${{env.DOTNET_ROOT}}/myapp
+        run: zip artifact-${GITHUB_SHA}.zip -r ${{env.DOTNET_ROOT}}/myapp
 
-  deploy:
-    runs-on: self-hosted:dev
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  # deploy:
+  #   runs-on: self-hosted:dev
+  #   needs: build
+  #   environment:
+  #     name: 'Production'
+  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: .net-app-develop
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: .net-app-develop
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'ais-dev'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
-          package: .
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: 'ais-dev'
+  #         slot-name: 'Production'
+  #         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
+  #         package: .
