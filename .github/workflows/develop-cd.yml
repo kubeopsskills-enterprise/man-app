@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o ./manapp
 
       # - name: Upload artifact for deployment job
       #   uses: actions/upload-artifact@v2
@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload artifact for deployment job
         run: |
-          zip artifact-${GITHUB_SHA}.zip -r ${{env.DOTNET_ROOT}}/myapp
+          zip artifact-${GITHUB_SHA}.zip -r ./manapp
           az storage blob upload -c build -n artifact-${GITHUB_SHA}.zip -f ${GITHUB_WORKSPACE}/artifact-${GITHUB_SHA}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
 
       - uses: actions/checkout@v2
@@ -69,15 +69,12 @@ jobs:
         with:
             ref: main
 
-      - name: Retrive the latest artifact name from main branch
-        run: |
-          export ARTIFACT_NAME=$(cat latest-build-artifact)
-          echo ARTIFACT NAME: $ARTIFACT_NAME
-
       - name: Download artifact from build job
         run: |
-          az storage blob download --verbose -c build -n $(echo $ARTIFACT) -f ${GITHUB_WORKSPACE}/$(echo $ARTIFACT) --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-          ls -la
+          export ARTIFACT_NAME=$(cat latest-build-artifact)
+          az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          unzip ${ARTIFACT_NAME}
+          ls -la ./manapp
 
       # - name: Deploy to Azure Web App
       #   id: deploy-to-webapp
