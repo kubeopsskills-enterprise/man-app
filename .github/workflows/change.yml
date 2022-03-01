@@ -1,4 +1,4 @@
-name: Review by VA/PT security team
+name: Review by Change team
 
 on:
   repository_dispatch:
