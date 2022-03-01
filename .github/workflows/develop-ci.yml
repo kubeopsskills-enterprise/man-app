@@ -12,59 +12,59 @@ env:
 
 jobs:
 
-  unit-tests:
+  # unit-tests:
 
-    name: Run Unit tests
+  #   name: Run Unit tests
 
-    runs-on: self-hosted:dev
+  #   runs-on: self-hosted:dev
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v1
+  #     with:
+  #       dotnet-version: '6.0.x'
+  #   - name: Restore dependencies
+  #     run: dotnet restore
+  #   - name: Build
+  #     run: dotnet build --no-restore
+  #   - name: Test
+  #     run: dotnet test --no-build --verbosity normal
 
-  ##################################################################################################
+  # ##################################################################################################
 
-  codeql:
+  # codeql:
 
-    name: Scan the code with CodeQL
+  #   name: Scan the code with CodeQL
 
-    runs-on: self-hosted:dev
+  #   runs-on: self-hosted:dev
 
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+  #   permissions:
+  #     actions: read
+  #     contents: read
+  #     security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp', 'javascript' ]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       language: [ 'csharp', 'javascript' ]
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-            ref: develop
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #           ref: develop
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: ${{ matrix.language }}
+  #     - name: Initialize CodeQL
+  #       uses: github/codeql-action/init@v1
+  #       with:
+  #         languages: ${{ matrix.language }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v1
+  #     - name: Autobuild
+  #       uses: github/codeql-action/autobuild@v1
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+  #     - name: Perform CodeQL Analysis
+  #       uses: github/codeql-action/analyze@v1
 
   ##################################################################################################
 
@@ -76,14 +76,18 @@ jobs:
 
     runs-on: self-hosted:dev
 
-    needs: [unit-tests, codeql]
+    # needs: [unit-tests, codeql]
 
     steps:
-      - name: Repository dispatch
-        run: |
-          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-            --header 'accept: application/vnd.github.v3+json' \
-            --header 'Content-Type: application/json' \
-            --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
+      - run: |
+          echo "TEST" > test
+          az storage blob upload --connection-string ${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}' \
+            -f ./test -c build -n test-${GITHUB_SHA}
+      # - name: Repository dispatch
+      #   run: |
+      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+      #       --header 'accept: application/vnd.github.v3+json' \
+      #       --header 'Content-Type: application/json' \
+      #       --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
 
