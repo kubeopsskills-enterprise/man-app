@@ -76,7 +76,7 @@ jobs:
 
       - name: Download artifact from build job
         run: |
-          az storage blob download --verbose -c build -n $(cat latest-build-artifact) -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          az storage blob download --verbose -c build -n $(echo $ARTIFACT) -f ${GITHUB_WORKSPACE}/$(echo $ARTIFACT) --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
           ls -la
 
       # - name: Deploy to Azure Web App
