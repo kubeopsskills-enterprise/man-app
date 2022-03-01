@@ -84,9 +84,10 @@ jobs:
           cat test
           pwd
           env
+          cat ${GITHUB_WORKSPACE}/test
       - run: |    
           az storage blob upload --connection-string ${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}' \
-            -f ./test -c build -n test-${GITHUB_SHA}
+            -f ${GITHUB_WORKSPACE}/test -c build -n test-${GITHUB_SHA}
       # - name: Repository dispatch
       #   run: |
       #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
