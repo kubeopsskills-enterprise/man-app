@@ -9,32 +9,6 @@ env:
   HOME: "/home/azureuser"
 
 jobs:
-  build:
-    runs-on: self-hosted:sit
-    
-    steps:
-      - uses: actions/checkout@v2
-        with:
-            ref: main
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
-          include-prerelease: true
-
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: .net-app-sit
-          path: ${{env.DOTNET_ROOT}}/myapp
-
   deploy:
     runs-on: self-hosted:sit
     needs: build
@@ -43,10 +17,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+      - uses: actions/checkout@v2
         with:
-          name: .net-app-sit
+            ref: main
+            
+      - name: Download artifact from build job
+        run: |
+          export ARTIFACT_NAME=$(cat latest-build-artifact)
+          az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          unzip ${ARTIFACT_NAME}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -55,7 +34,7 @@ jobs:
           app-name: 'ais-sit'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEFA5B81DB7A43FB80E71E0167AEDCD2 }}
-          package: .
+          package: ./build-output
 
   dispatch-repository:
     needs: deploy
