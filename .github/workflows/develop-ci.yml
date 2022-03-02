@@ -12,78 +12,74 @@ env:
 
 jobs:
 
-  # unit-tests:
+  unit-tests:
 
-  #   name: Run Unit tests
+    name: Run Unit tests
 
-  #   runs-on: self-hosted:dev
+    runs-on: self-hosted:dev
 
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v1
-  #     with:
-  #       dotnet-version: '6.0.x'
-  #   - name: Restore dependencies
-  #     run: dotnet restore
-  #   - name: Build
-  #     run: dotnet build --no-restore
-  #   - name: Test
-  #     run: dotnet test --no-build --verbosity normal
-
-  # ##################################################################################################
-
-  # codeql:
-
-  #   name: Scan the code with CodeQL
-
-  #   runs-on: self-hosted:dev
-
-  #   permissions:
-  #     actions: read
-  #     contents: read
-  #     security-events: write
-#     services:
-#       postgres:
-#         image: postgres
-#         env:
-#           POSTGRES_PASSWORD: postgres
-#         options: >-
-#           --health-cmd pg_isready
-#           --health-interval 10s
-#           --health-timeout 5s
-#           --health-retries 5
-#         ports:
-#           - 5432:5432
-
-#     permissions:
-#       actions: read
-#       contents: read
-#       security-events: write
-
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       language: [ 'csharp', 'javascript' ]
-
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #           ref: develop
-
-  #     - name: Initialize CodeQL
-  #       uses: github/codeql-action/init@v1
-  #       with:
-  #         languages: ${{ matrix.language }}
-
-  #     - name: Autobuild
-  #       uses: github/codeql-action/autobuild@v1
-
-  #     - name: Perform CodeQL Analysis
-  #       uses: github/codeql-action/analyze@v1
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
 
   ##################################################################################################
+
+  codeql:
+
+    name: Scan the code with CodeQL
+
+    runs-on: self-hosted:dev
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+            ref: develop
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
+  #################################################################################################
 
 
 
@@ -93,17 +89,9 @@ jobs:
 
     runs-on: self-hosted:dev
 
-    # needs: [unit-tests, codeql]
+    needs: [unit-tests, codeql]
 
     steps:
-      # - run: |
-      #     echo "TEST" > test
-      #     cat test
-      #     pwd
-      #     env
-      #     cat ${GITHUB_WORKSPACE}/test
-      # - run: |    
-      #     az storage blob upload -c build -n test-${GITHUB_SHA} -f ${GITHUB_WORKSPACE}/test --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
       - name: Repository dispatch
         run: |
           curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
