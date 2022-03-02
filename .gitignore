@@ -2,3 +2,7 @@ bin/
 obj/
 .vs/
 .vscode/
+./dev-app/
+./sit-app/
+./uat-app/
+./prod-app/
