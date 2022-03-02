@@ -27,22 +27,12 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./manapp
-
-      # - name: Upload artifact for deployment job
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: .net-app-develop
-      #     path: ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o ./dev-app
 
       - name: Upload artifact for deployment job
         run: |
-          zip artifact-${GITHUB_SHA}.zip -r ./manapp
+          zip artifact-${GITHUB_SHA}.zip -r ./dev-app
           az storage blob upload -c build -n artifact-${GITHUB_SHA}.zip -f ${GITHUB_WORKSPACE}/artifact-${GITHUB_SHA}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-
-      - uses: actions/checkout@v2
-        with:
-            ref: main
 
       - name: Save artifact name to main branch
         run: |
@@ -61,20 +51,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      # - name: Download artifact from build job
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: .net-app-develop
       - uses: actions/checkout@v2
         with:
-            ref: main
+            ref: develop
 
       - name: Download artifact from build job
         run: |
           export ARTIFACT_NAME=$(cat latest-build-artifact)
           az storage blob download -c "build" -n ${ARTIFACT_NAME} -f ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
           unzip ${ARTIFACT_NAME}
-          ls -la ./manapp
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -83,4 +68,4 @@ jobs:
           app-name: 'ais-dev'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87241CB7D83A4C6B925F284A4955F252 }}
-          package: ./manapp
+          package: ./dev-app
