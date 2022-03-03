@@ -13,12 +13,12 @@ jobs:
 
     name: Dispatch repository
 
-    runs-on: self-hosted:sit
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Repository dispatch
         run: |
-          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app-pipeline/dispatches' \
             --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
             --header 'accept: application/vnd.github.v3+json' \
             --header 'Content-Type: application/json' \
