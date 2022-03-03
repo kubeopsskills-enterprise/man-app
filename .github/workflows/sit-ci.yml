@@ -4,7 +4,15 @@ on:
   push:
     tags:
       - "*.*.*"
-
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'tags'
+        required: true 
+      environment:
+        description: 'Environment to run'
+        type: environment
+        required: true 
 
 jobs:
 
