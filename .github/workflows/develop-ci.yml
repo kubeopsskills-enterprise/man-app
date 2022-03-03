@@ -101,6 +101,8 @@ jobs:
     steps:
       - name: Repository dispatch
         run: |
+          echo "SHA -> ${GITHUB_SHA}" 
+          echo "SHA -> " ${GITHUB_SHA}
           curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
             --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
             --header 'accept: application/vnd.github.v3+json' \
