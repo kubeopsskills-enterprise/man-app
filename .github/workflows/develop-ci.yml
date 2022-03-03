@@ -35,7 +35,7 @@ jobs:
 
     - name: Send notification to MS Team channel
       run: |
-        curl -H 'Content-Type: application/json' -d '{"text": $(cat unit-test-results)}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
+        curl -H 'Content-Type: application/json' -d '{"text": "'$(cat unit-test-results)'"}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
 
   ##################################################################################################
 
@@ -108,13 +108,13 @@ jobs:
           echo $DISPATCH_SHA
           echo $(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "'$DISPATCH_SHA'"' ./.github/template/env-repository-dispatch.json)
           DISPATCH_BODY=$(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "'$DISPATCH_SHA'"' ./.github/template/env-repository-dispatch.json)
-      - name: Repository dispatch
-        run: |
-          DISPATCH_SHA=$(echo ${GITHUB_SHA})
-          DISPATCH_BODY=$(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "'$DISPATCH_SHA'"' ./.github/template/env-repository-dispatch.json)
-          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
-            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
-            --header 'accept: application/vnd.github.v3+json' \
-            --header 'Content-Type: application/json' \
-            --data-raw "$DISPATCH_BODY"
+      # - name: Repository dispatch
+      #   run: |
+      #     DISPATCH_SHA=$(echo ${GITHUB_SHA})
+      #     DISPATCH_BODY=$(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "'$DISPATCH_SHA'"' ./.github/template/env-repository-dispatch.json)
+      #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
+      #       --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+      #       --header 'accept: application/vnd.github.v3+json' \
+      #       --header 'Content-Type: application/json' \
+      #       --data-raw "$DISPATCH_BODY"
 
