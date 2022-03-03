@@ -91,6 +91,10 @@ jobs:
     needs: [unit-tests, codeql]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+            ref: develop
       - name: Repository dispatch
         run: |
           DISPATCH_SHA=$(echo ${GITHUB_SHA})
