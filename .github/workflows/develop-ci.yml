@@ -104,7 +104,9 @@ jobs:
           echo "SHA -> " ${GITHUB_SHA}
           cat ./.github/template/env-repository-dispatch.json
           echo "\n"
-          echo $(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "${GITHUB_SHA}"' ./.github/template/env-repository-dispatch.json)
+          export DISPATCH_SHA=$(echo ${GITHUB_SHA})
+          echo $DISPATCH_SHA
+          echo $(jq '.event_type |= "dev-ais-app-repository-dispatch" | .client_payload.github_sha |= "${$DISPATCH_SHA}"' ./.github/template/env-repository-dispatch.json)
       # - name: Repository dispatch
       #   run: |
       #     curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
