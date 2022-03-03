@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ develop ]
 
-env:
-  DOTNET_CLI_HOME: "/home/azureuser"
-  HOME: "/home/azureuser"
-
 jobs:
 
   unit-tests:
