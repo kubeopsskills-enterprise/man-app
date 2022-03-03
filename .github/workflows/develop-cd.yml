@@ -42,6 +42,7 @@ jobs:
       - name: Save artifact name to main branch
         run: |
           echo "artifact-${{ github.event.client_payload.github_sha }}.zip" > latest-build-artifact
+          cat latest-build-artifact
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
