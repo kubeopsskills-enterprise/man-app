@@ -13,6 +13,7 @@ jobs:
     runs-on: self-hosted:dev
 
     steps:
+      - run: echo "SIGNAL 2"
       - run: echo ${{ github.event.client_payload.github_sha }}
 
       - uses: actions/checkout@v2
@@ -33,14 +34,15 @@ jobs:
 
       - name: Upload artifact for deployment job
         run: |
-          zip artifact-${GITHUB_SHA}.zip -r ./build-output
+          zip artifact-${{ github.event.client_payload.github_sha }}..zip -r ./build-output
           rm -rf ./build-output
-          az storage blob upload -c build -n artifact-${GITHUB_SHA}.zip -f ${GITHUB_WORKSPACE}/artifact-${GITHUB_SHA}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
-          rm artifact-${GITHUB_SHA}.zip
+          az storage blob upload -c build -n artifact-${{ github.event.client_payload.github_sha }}..zip -f ${GITHUB_WORKSPACE}/artifact-${{ github.event.client_payload.github_sha }}..zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
+          rm artifact-${{ github.event.client_payload.github_sha }}..zip
           
       - name: Save artifact name to main branch
         run: |
-          echo "artifact-${GITHUB_SHA}.zip" > latest-build-artifact
+          echo "artifact-${{ github.event.client_payload.github_sha }}.zip" > latest-build-artifact
+          cat latest-build-artifact
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
