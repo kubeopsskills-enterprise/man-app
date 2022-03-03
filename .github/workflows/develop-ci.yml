@@ -26,15 +26,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: |
-        dotnet test --no-build --verbosity m > unit-test-results
-        cat ./unit-test-results
-
-    - name: Send notification to MS Team channel
-      run: |
-        UNIT_TEST_RESULTS=$(cat unit-test-results | jq -Rr @html)
-        UNIT_TEST_RESULTS=sdfewfwef
-        echo $UNIT_TEST_RESULTS
-        curl -H 'Content-Type: application/json' -d '{"text": "'$UNIT_TEST_RESULTS'"}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
+        dotnet test --no-build --verbosity normal
 
   codeql:
 
@@ -95,6 +87,7 @@ jobs:
         uses: actions/checkout@v2
         with:
             ref: develop
+            
       - name: Repository dispatch
         run: |
           DISPATCH_SHA=$(echo ${GITHUB_SHA})

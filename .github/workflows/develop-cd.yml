@@ -39,7 +39,7 @@ jobs:
           az storage blob upload -c build -n artifact-${{ github.event.client_payload.github_sha }}.zip -f ${GITHUB_WORKSPACE}/artifact-${{ github.event.client_payload.github_sha }}.zip --connection-string "${{ secrets.BUILD_STORAGE_ACCOUNT_CONNECTION_STRING }}"
           rm artifact-${{ github.event.client_payload.github_sha }}.zip
           
-      - name: Save artifact name to main branch
+      - name: Save artifact name to develop branch
         run: |
           echo "artifact-${{ github.event.client_payload.github_sha }}.zip" > latest-build-artifact
           cat latest-build-artifact
