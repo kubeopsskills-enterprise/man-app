@@ -35,7 +35,9 @@ jobs:
 
     - name: Send notification to MS Team channel
       run: |
-        curl -H 'Content-Type: application/json' -d '{"text": "'$(cat unit-test-results)'"}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
+        UNIT_TEST_RESULTS=$(cat unit-test-results | jq -Rr @html)
+        echo UNIT_TEST_RESULTS
+        curl -H 'Content-Type: application/json' -d '{"text": "'$UNIT_TEST_RESULTS'"}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
 
   ##################################################################################################
 
