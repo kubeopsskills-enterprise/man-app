@@ -99,6 +99,9 @@ jobs:
     needs: [unit-tests]
 
     steps:
+      - run: |
+          echo "SHA -> ${GITHUB_SHA}" 
+          echo "SHA -> " ${GITHUB_SHA}
       - name: Repository dispatch
         run: |
           curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
