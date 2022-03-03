@@ -1,4 +1,4 @@
-name: Development CD
+name: Develop CD
 
 on:
   repository_dispatch:
@@ -13,9 +13,6 @@ jobs:
     runs-on: self-hosted:dev
 
     steps:
-      - run: echo "SIGNAL 2"
-      - run: echo ${{ github.event.client_payload.github_sha }}
-
       - uses: actions/checkout@v2
         with:
             ref: develop
@@ -42,7 +39,6 @@ jobs:
       - name: Save artifact name to develop branch
         run: |
           echo "artifact-${{ github.event.client_payload.github_sha }}.zip" > latest-build-artifact
-          cat latest-build-artifact
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
