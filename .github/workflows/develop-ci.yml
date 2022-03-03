@@ -35,7 +35,7 @@ jobs:
 
     - name: Send notification to MS Team channel
       run: |
-        curl -H 'Content-Type: application/json' -d '{"text": "$(cat unit-test-results)"}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
+        curl -H 'Content-Type: application/json' -d '{"text": $(cat unit-test-results)}' ${{ secrets.MS_TEAM_DEV_WEBHOOK }}
 
   ##################################################################################################
 
@@ -105,5 +105,5 @@ jobs:
             --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
             --header 'accept: application/vnd.github.v3+json' \
             --header 'Content-Type: application/json' \
-            --data-raw '{"event_type":"dev-ais-app-repository-dispatch"}'
+            --data-raw '{"event_type":"dev-ais-app-repository-dispatch", "client_payload": {"github_sha": "${GITHUB_SHA}"}}'
 
