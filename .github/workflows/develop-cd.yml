@@ -13,11 +13,12 @@ jobs:
     runs-on: self-hosted:dev
 
     steps:
+      - run: echo "SIGNAL 1"
       - run: echo ${{ github.event.client_payload.github_sha }}
 
       - uses: actions/checkout@v2
         with:
-            ref: develop
+            ref: ${{ github.event.client_payload.github_sha }}
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -57,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-            ref: develop
+            ref: ${{ github.event.client_payload.github_sha }}
 
       - name: Download artifact from build job
         run: |
