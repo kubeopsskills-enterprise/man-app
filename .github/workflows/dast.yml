@@ -1,0 +1,37 @@
+name: DAST
+
+on:
+  repository_dispatch:
+    types: [dast-repository-dispatch]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-20.04
+    name: Scan the web application with DAST
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.3.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'https://ais-sit.azurewebsites.net/'
+          rules_file_name: '.zap/rules.tsv'
+          fail_action: true
+
+  dispatch-repository:
+    runs-on: ubuntu-20.04
+    needs: [zap_scan]
+    name: Dispatch repository
+
+    steps:
+      - name: Repository dispatch
+        run: |
+          curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app-pipeline/dispatches' \
+            --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
+            --header 'accept: application/vnd.github.v3+json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{"event_type":"uat-cd-repository-dispatch"}'
