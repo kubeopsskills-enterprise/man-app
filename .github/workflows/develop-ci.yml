@@ -3,8 +3,12 @@ name: DEVELOP CI
 on:
   push:
     branches: [ develop ]
+    paths-ignore:
+    - 'latest-build-artifact'
   pull_request:
     branches: [ develop ]
+    paths-ignore:
+    - 'latest-build-artifact'
   workflow_dispatch:
 
 jobs:
