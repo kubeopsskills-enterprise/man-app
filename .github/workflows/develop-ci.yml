@@ -99,10 +99,11 @@ jobs:
     needs: [unit-tests]
 
     steps:
-      - name: Repository dispatch
-        run: |
+      - run: |
           echo "SHA -> ${GITHUB_SHA}" 
           echo "SHA -> " ${GITHUB_SHA}
+      - name: Repository dispatch
+        run: |
           curl -v --location --request POST 'https://api.github.com/repos/kubeopsskills-enterprise/man-app/dispatches' \
             --header 'Authorization: Bearer ${{ secrets.DISPATCHER_TOKEN }}' \
             --header 'accept: application/vnd.github.v3+json' \
